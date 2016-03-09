@@ -9,10 +9,9 @@ defmodule Snake do
     children = [
       # Start the endpoint when the application starts
       supervisor(Snake.Endpoint, []),
-      # Start the Ecto repository
-      supervisor(Snake.Repo, []),
       # Here you could define other workers and supervisors as children
       # worker(Snake.Worker, [arg1, arg2, arg3]),
+      worker(Snake.GameState, []),
     ]
 
     # See http://elixir-lang.org/docs/stable/elixir/Supervisor.html

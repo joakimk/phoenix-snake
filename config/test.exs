@@ -10,10 +10,10 @@ config :snake, Snake.Endpoint,
 config :logger, level: :warn
 
 # Configure your database
-config :snake, Snake.Repo,
-  adapter: Ecto.Adapters.Postgres,
-  username: "postgres",
-  password: "postgres",
-  database: "snake_test",
-  hostname: "localhost",
-  pool: Ecto.Adapters.SQL.Sandbox
+#config :snake, Snake.Repo,
+#  adapter: Ecto.Adapters.Postgres,
+#  username: "postgres",
+#  password: "postgres",
+#  database: "snake_test",
+#  hostname: "localhost",
+#  pool: Ecto.Adapters.SQL.Sandbox
