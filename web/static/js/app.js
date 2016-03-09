@@ -18,7 +18,13 @@ import "phoenix_html"
 // Local files can be imported directly using relative
 // paths "./socket" or full ones "web/static/js/socket".
 
-// import socket from "./socket"
+import {Socket} from "phoenix"
+
+let socket = new Socket("/socket", { params: {} })
+socket.connect()
+
+let channel = socket.channel("game", {})
+channel.join()
 
 var gameElement = document.getElementsByClassName("js-game")[0];
 
@@ -26,6 +32,10 @@ window.app = Elm.embed(Elm.Game, gameElement, {
   updatedSnake: { x: 300, y: 300  }
 });
 
+channel.on("updated_snake", (snake) => {
+  app.ports.updatedSnake.send(snake)
+})
+
 app.ports.keyboard.subscribe((keyboard) => {
-  console.log(x)
+  channel.push("keyboard_event", keyboard)
 })

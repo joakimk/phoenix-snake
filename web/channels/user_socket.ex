@@ -2,7 +2,7 @@ defmodule Snake.UserSocket do
   use Phoenix.Socket
 
   ## Channels
-  # channel "rooms:*", Snake.RoomChannel
+  channel "game", Snake.GameChannel
 
   ## Transports
   transport :websocket, Phoenix.Transports.WebSocket
