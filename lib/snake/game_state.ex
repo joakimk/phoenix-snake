@@ -6,7 +6,7 @@ defmodule Snake.GameState do
   end
 
   def start_link do
-    GenServer.start_link(__MODULE__, %{x: 30, y: 300, direction: :right}, name: __MODULE__)
+    GenServer.start_link(__MODULE__, %{x: 30, y: 30, direction: :right}, name: __MODULE__)
   end
 
   def init(state) do
@@ -15,15 +15,14 @@ defmodule Snake.GameState do
   end
 
   def handle_info(:start_tick, state) do
-    {:ok, _} = :timer.send_interval 1000, :tick
+    {:ok, _} = :timer.send_interval 250, :tick
     {:noreply, state}
   end
 
   def handle_info(:tick, state) do
-    IO.inspect "TICK"
     state = update_by_direction(state)
-    Snake.Endpoint.broadcast! "game", "updated_snake", %{x: state.x, y: state.y}
-    IO.inspect state
+    state = wrap(state)
+    Snake.Endpoint.broadcast! "game", "updated_snake", %{ body: [ %{x: state.x, y: state.y} ] }
     {:noreply, state}
   end
 
@@ -35,6 +34,12 @@ defmodule Snake.GameState do
     state = %{state | direction: direction}
     {:noreply, state}
   end
+
+  defp wrap(state = %{ x: 480 }), do: %{ state | x: 30 }
+  defp wrap(state = %{ x: 0 }), do: %{ state | x: 480 }
+  defp wrap(state = %{ y: 240 }), do: %{ state | y: 30 }
+  defp wrap(state = %{ y: 0 }), do: %{ state | y: 240 }
+  defp wrap(state), do: state
 
   defp update_by_direction(state = %{ direction: :right }) do
     %{state | x: state.x + 30}

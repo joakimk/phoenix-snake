@@ -6,7 +6,9 @@ import Graphics.Element exposing (..)
 import Keyboard exposing (..)
 
 type alias Snake =
-  { x : Int, y : Int }
+  {
+    body : List { x : Int, y : Int }
+  }
 
 port updatedSnake : Signal Snake
 
@@ -18,11 +20,16 @@ main : Signal Element
 main =
   Signal.map render updatedSnake
 
+render : Snake -> Element
 render snake =
-  collage snake.x snake.y
-    [ square 20
-        |> filled green
-    ]
+  collage 1000 500 (List.map renderElement snake.body)
+
+renderElement : { x : Int, y : Int } -> Form
+renderElement element =
+  square 20
+  |> filled green
+  |> moveX (toFloat element.x - 500 + 30)
+  |> moveY (toFloat -(element.y - 250 + 30))
 
 
 green : Color

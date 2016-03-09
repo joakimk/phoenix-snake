@@ -29,7 +29,7 @@ channel.join()
 var gameElement = document.getElementsByClassName("js-game")[0];
 
 window.app = Elm.embed(Elm.Game, gameElement, {
-  updatedSnake: { x: 300, y: 300  }
+  updatedSnake: { body: [ { x: 30, y: 30 } ] }
 });
 
 channel.on("updated_snake", (snake) => {

@@ -1,20 +1,11 @@
 # Snake
 
-To start your Phoenix app:
+A multiplayer game made in a couple of hours at an elixir meetup.
 
-  * Install dependencies with `mix deps.get`
-  * Create and migrate your database with `mix ecto.create && mix ecto.migrate`
-  * Install Node.js dependencies with `npm install`
-  * Start Phoenix endpoint with `mix phoenix.server`
+## Commands used to deploy to heroku
 
-Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
-
-Ready to run in production? Please [check our deployment guides](http://www.phoenixframework.org/docs/deployment).
-
-## Learn more
-
-  * Official website: http://www.phoenixframework.org/
-  * Guides: http://phoenixframework.org/docs/overview
-  * Docs: http://hexdocs.pm/phoenix
-  * Mailing list: http://groups.google.com/group/phoenix-talk
-  * Source: https://github.com/phoenixframework/phoenix
+    heroku apps:create phoenix-snake --region eu
+    heroku buildpacks:set https://github.com/gjaldon/phoenix-static-buildpack
+    heroku buildpacks:add --index 1 https://github.com/HashNuke/heroku-buildpack-elixir
+    heroku config:set SECRET_KEY_BASE=$(elixir -e "IO.puts :crypto.strong_rand_bytes(64) |> Base.encode64")
+    git push heroku

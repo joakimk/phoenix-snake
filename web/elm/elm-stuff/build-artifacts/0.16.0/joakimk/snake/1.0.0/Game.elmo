@@ -16,20 +16,27 @@ Elm.Game.make = function (_elm) {
    $Signal = Elm.Signal.make(_elm);
    var _op = {};
    var green = A4($Color.rgba,10,111,111,0.6);
-   var render = function (snake) {
-      return A3($Graphics$Collage.collage,snake.x,snake.y,_U.list([A2($Graphics$Collage.filled,green,$Graphics$Collage.square(20))]));
+   var renderElement = function (element) {
+      return A2($Graphics$Collage.moveY,
+      $Basics.toFloat(0 - (element.y - 250 + 30)),
+      A2($Graphics$Collage.moveX,$Basics.toFloat(element.x) - 500 + 30,A2($Graphics$Collage.filled,green,$Graphics$Collage.square(20))));
    };
+   var render = function (snake) {    return A3($Graphics$Collage.collage,1000,500,A2($List.map,renderElement,snake.body));};
    var keyboard = Elm.Native.Port.make(_elm).outboundSignal("keyboard",function (v) {    return {x: v.x,y: v.y};},$Keyboard.arrows);
    var updatedSnake = Elm.Native.Port.make(_elm).inboundSignal("updatedSnake",
    "Game.Snake",
    function (v) {
-      return typeof v === "object" && "x" in v && "y" in v ? {_: {}
-                                                             ,x: typeof v.x === "number" && isFinite(v.x) && Math.floor(v.x) === v.x ? v.x : _U.badPort("an integer",
-                                                             v.x)
-                                                             ,y: typeof v.y === "number" && isFinite(v.y) && Math.floor(v.y) === v.y ? v.y : _U.badPort("an integer",
-                                                             v.y)} : _U.badPort("an object with fields `x`, `y`",v);
+      return typeof v === "object" && "body" in v ? {_: {}
+                                                    ,body: typeof v.body === "object" && v.body instanceof Array ? Elm.Native.List.make(_elm).fromArray(v.body.map(function (v) {
+                                                       return typeof v === "object" && "x" in v && "y" in v ? {_: {}
+                                                                                                              ,x: typeof v.x === "number" && isFinite(v.x) && Math.floor(v.x) === v.x ? v.x : _U.badPort("an integer",
+                                                                                                              v.x)
+                                                                                                              ,y: typeof v.y === "number" && isFinite(v.y) && Math.floor(v.y) === v.y ? v.y : _U.badPort("an integer",
+                                                                                                              v.y)} : _U.badPort("an object with fields `x`, `y`",
+                                                       v);
+                                                    })) : _U.badPort("an array",v.body)} : _U.badPort("an object with fields `body`",v);
    });
    var main = A2($Signal.map,render,updatedSnake);
-   var Snake = F2(function (a,b) {    return {x: a,y: b};});
-   return _elm.Game.values = {_op: _op,Snake: Snake,main: main,render: render,green: green};
+   var Snake = function (a) {    return {body: a};};
+   return _elm.Game.values = {_op: _op,Snake: Snake,main: main,render: render,renderElement: renderElement,green: green};
 };
